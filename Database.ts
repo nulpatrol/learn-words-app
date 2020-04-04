@@ -8,7 +8,7 @@ export class Database {
   }
 }
 
-export const processQuery = (sql: string, params = []) => new Promise(
+export const processQuery = async<T> (sql: string, params: Array<T> = []): Promise<SQLite.SQLResultSet> => new Promise(
   (resolve: Function, reject: Function) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -21,8 +21,8 @@ export const processQuery = (sql: string, params = []) => new Promise(
   }
 );
 
-export const execute = (statements: any) => new Promise(
-  (resolve, reject) => {
+export const execute = async (statements: Array<SQLite.Query>): Promise<Array<SQLite.ResultSet>> => new Promise(
+  (resolve: Function, reject: Function) => {
     db.exec(statements, false, (error, result) => {
       if (!error) {
         return resolve(result);

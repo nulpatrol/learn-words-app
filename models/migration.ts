@@ -6,30 +6,43 @@ const db = Database.getConnection();
 
 const tables = [
   `create table if not exists languages (
-        key varchar,
-        UNIQUE(key)
-    );`,
+    key varchar,
+    UNIQUE(key)
+  );`,
   `create table if not exists words (
-        id integer primary key not null
-    );`,
+    id integer primary key not null
+  );`,
   `create table if not exists words_translations (
-        id integer primary key not null,
-        value varchar,
-        word_id integer,
-        language varchar,
-        level int,
-        FOREIGN KEY(language) REFERENCES languages(key),
-        FOREIGN KEY(word_id) REFERENCES words(id)
-    );`,
+    id integer primary key not null,
+    value varchar,
+    word_id integer,
+    language varchar,
+    level int,
+    FOREIGN KEY(language) REFERENCES languages(key),
+    FOREIGN KEY(word_id) REFERENCES words(id)
+  );`,
   `create table if not exists settings (
-        key varchar primary key not null,
-        value varchar not null
-    );`,
+    key varchar primary key not null,
+    value varchar not null
+  );`,
 ];
 
-const languagesList = ['en', 'de', 'pl', 'uk', 'da', 'ru'];
+const languagesList = ['en', 'de', 'pl', 'uk', 'da', 'ru', 'fr'];
 
 export default async (): Promise<void> => {
+  let isMigrated = false;
+  try {
+    let [ { rows } ] = await execute([
+      { sql: 'select value from settings where key = "migrated"', args: [] }
+    ]);
+    isMigrated = rows.length > 0;
+  } catch (e) {
+  }
+
+  if (isMigrated) {
+    return;
+  }
+
   await execute([
     { sql: 'PRAGMA foreign_keys = ON;', args: [] },
     { sql: 'drop table if exists words_translations', args: [] },
@@ -41,8 +54,8 @@ export default async (): Promise<void> => {
   const promises = tables.map((statement) => processQuery(statement));
   await Promise.all(promises);
 
-  await processQuery('insert into settings (key, value) VALUES ("main_language", "uk")');
-  await processQuery('insert into settings (key, value) VALUES ("secondary_language", "en")');
+  await processQuery('insert into settings (key, value) VALUES ("main_language", "en")');
+  await processQuery('insert into settings (key, value) VALUES ("secondary_language", "ru")');
 
   const languagesPromises = languagesList.map((lang) => processQuery('insert into languages (key) VALUES (?)', [lang]));
   await Promise.all(languagesPromises);
@@ -96,4 +109,6 @@ export default async (): Promise<void> => {
       ]),
     ),
   );
+
+  await processQuery('insert into settings (key, value) VALUES ("migrated", "ok")');
 };
