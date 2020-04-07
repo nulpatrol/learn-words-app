@@ -58,18 +58,24 @@ const defaultStyles = StyleSheet.create({
     color: 'black',
     paddingRight: 30,
     backgroundColor: 'white',
+    shadowColor: 'grey',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
 });
 
 type SelectedItem = {
   items: Array<Item>,
-  key: string,
   value: string,
 }
 
-const getSelectedItem = ({ items, key, value }: SelectedItem) => {
+const getSelectedItem = ({ items, value }: SelectedItem) => {
   let idx = items
-    .findIndex(item => (item.key && key) ? item.key === key : item.value === value);
+    .findIndex(item => item.value === value);
   if (idx === -1) {
     idx = 0;
   }
@@ -81,7 +87,7 @@ const renderPickerItems = (items: Array<Item>) => {
     <Picker.Item
       label={label}
       value={value}
-      key={key || label}
+      key={key}
     />
   ));
 };
@@ -89,7 +95,7 @@ const renderPickerItems = (items: Array<Item>) => {
 type Item = {
   label: string,
   value: string,
-  key: string,
+  key: number,
 }
 
 type State = {
@@ -102,7 +108,6 @@ type State = {
 type ChoiceProps = {
   value: string,
   disabled: boolean,
-  itemKey: string,
   doneText: string,
   onValueChange: Function,
   onDonePress: Function | undefined,
@@ -133,7 +138,6 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
 
     const selectedItem = getSelectedItem({
       items,
-      key: props.itemKey,
       value: props.value,
     });
 

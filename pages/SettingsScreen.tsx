@@ -12,11 +12,17 @@ import CustomButton from '../components/Button';
 import Choice from "../components/Choice";
 import styles from '../styles/styles';
 
-type Props = {
+type SettingsScreenProps = {
   navigation: NavigationParams;
 };
 
-class SettingsScreen extends Component<Props> {
+type SettingsScreenState = {
+  modalIsVisible: boolean,
+  languages: Array<object>,
+  chosenLanguage: string,
+};
+
+class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState> {
   state = {
     modalIsVisible: true,
     languages: [],
@@ -48,26 +54,20 @@ class SettingsScreen extends Component<Props> {
   }
 
   render(): ReactNode {
-    const {navigation} = this.props;
-
     const { languages } = this.state;
+    const preparedLanguages = languages.map(language => ({
+      key: language.id,
+      label: language.name,
+      value: language.key,
+    }));
+
+    console.log(preparedLanguages);
 
     return (
       <SafeAreaView style={styles.gameContainer}>
         <StatusBar barStyle="light-content"/>
 
-        <Choice onValueChange={() => {}} items={[
-          {
-            label: "bla",
-            value: 'nnn',
-            key: 'ss',
-          },
-          {
-            label: "xxx",
-            value: 'sss',
-            key: 'saaas',
-          }
-        ]} />
+        <Choice onValueChange={() => {}} items={preparedLanguages} value={'fr'} />
 
         <CustomButton label={"Delete all words"} onClick={()=>{}} type={'danger'} />
       </SafeAreaView>
