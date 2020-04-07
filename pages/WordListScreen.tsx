@@ -12,7 +12,7 @@ import { ListItem } from 'react-native-elements';
 // @ts-ignore
 import { CircularProgress } from 'react-native-svg-circular-progress';
 import * as Speech from 'expo-speech';
-import { NavigationParams } from 'react-navigation';
+import { NavigationEventSubscription, NavigationParams } from 'react-navigation';
 import AddWordScreen from './AddWordScreen';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
@@ -39,14 +39,13 @@ class WordListScreen extends Component<Props> {
     words: [],
   };
 
-  subs = [];
+  subs: Array<NavigationEventSubscription> = [];
 
   componentDidMount(): void {
     this.update();
 
     const { navigation } = this.props;
     this.subs = [
-      // @ts-ignore
       navigation.addListener('didFocus', () => this.update()),
     ];
   }

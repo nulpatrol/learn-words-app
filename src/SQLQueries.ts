@@ -9,6 +9,10 @@ export const GET_WORDS = `
 
 export const GET_LANGUAGES = 'select * from languages';
 
+export const GET_SETTING = 'select value from settings where key = ?';
+
+export const SET_SETTING = 'update settings set value = ? where key = ?';
+
 export const INSERT_WORD = 'insert into words (id) VALUES (null)';
 
 export const INSERT_TRANSLATION = `

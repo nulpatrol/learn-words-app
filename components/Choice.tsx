@@ -26,7 +26,7 @@ const defaultStyles = StyleSheet.create({
   modalViewMiddle: {
     height: 45,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: 10,
     backgroundColor: '#f8f8f8',
@@ -58,13 +58,6 @@ const defaultStyles = StyleSheet.create({
     color: 'black',
     paddingRight: 30,
     backgroundColor: 'white',
-    shadowColor: 'grey',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
   },
 });
 
@@ -74,22 +67,11 @@ type SelectedItem = {
 }
 
 const getSelectedItem = ({ items, value }: SelectedItem) => {
-  let idx = items
-    .findIndex(item => item.value === value);
+  let idx = items.findIndex(item => item.value === value);
   if (idx === -1) {
     idx = 0;
   }
   return items[idx] || {};
-};
-
-const renderPickerItems = (items: Array<Item>) => {
-  return items.map(({ key, value, label }) => (
-    <Picker.Item
-      label={label}
-      value={value}
-      key={key}
-    />
-  ));
 };
 
 type Item = {
@@ -99,7 +81,6 @@ type Item = {
 }
 
 type State = {
-  items: Array<Item>,
   selectedItem: Item,
   showPicker: boolean,
   doneDepressed: boolean,
@@ -109,7 +90,7 @@ type ChoiceProps = {
   value: string,
   disabled: boolean,
   doneText: string,
-  onValueChange: Function,
+  onValueChange: Function | undefined,
   onDonePress: Function | undefined,
   items: Array<Item>,
   textInputProps: object,
@@ -125,6 +106,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     itemKey: null,
     doneText: 'Done',
     onDonePress: undefined,
+    onValueChange: undefined,
     textInputProps: {},
     pickerProps: {},
     touchableDoneProps: {},
@@ -134,32 +116,39 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
   constructor(props: ChoiceProps) {
     super(props);
 
-    const { items } = props;
-
-    const selectedItem = getSelectedItem({
-      items,
-      value: props.value,
-    });
-
     this.state = {
-      items,
-      selectedItem,
+      selectedItem: {
+        value: '',
+        key: 0,
+        label: '',
+      },
       showPicker: false,
       doneDepressed: false,
     };
   }
 
+  componentDidUpdate(prevProps: Readonly<ChoiceProps>, prevState: Readonly<State>): void {
+    const { items, value } = this.props;
+    if (items === prevProps.items && value === prevProps.value) return;
+
+    const selectedItem = getSelectedItem({
+      items,
+      value,
+    });
+    this.setState(() => ({ selectedItem }))
+  }
+
   onValueChange = (value: string, index: number) => {
-    const { onValueChange } = this.props;
+    const { onValueChange, items } = this.props;
 
-    onValueChange(value, index);
+    if (onValueChange) onValueChange(value, index);
 
-    this.setState((prevState) => ({ selectedItem: prevState.items[index] }));
+    this.setState(() => ({ selectedItem: items[index] }));
   };
 
   togglePicker = (postToggleCallback: Function | undefined) => {
     const { disabled } = this.props;
-    const { showPicker } = this.state;
+    const { showPicker, selectedItem } = this.state;
 
     if (disabled) return;
 
@@ -169,7 +158,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
 
     this.setState(
       (prevState) => ({ showPicker: !prevState.showPicker }),
-      () => postToggleCallback && postToggleCallback(),
+      () => postToggleCallback && postToggleCallback(selectedItem),
     );
   };
 
@@ -213,8 +202,20 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     );
   };
 
+  renderPickerItems = () => {
+    const { items } = this.props;
+
+    return items.map(({ key, value, label }) => (
+      <Picker.Item
+        label={label}
+        value={value}
+        key={key}
+      />
+    ));
+  };
+
   render() {
-    const { pickerProps, touchableWrapperProps, textInputProps, items } = this.props;
+    const { pickerProps, touchableWrapperProps, textInputProps } = this.props;
     const { selectedItem, showPicker } = this.state;
 
     return (
@@ -259,7 +260,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
               selectedValue={selectedItem.value}
               {...pickerProps}
             >
-              {renderPickerItems(items)}
+              {this.renderPickerItems()}
             </Picker>
           </View>
         </Modal>
