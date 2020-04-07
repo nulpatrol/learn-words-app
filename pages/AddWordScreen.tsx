@@ -71,25 +71,17 @@ export default class AddWordScreen extends Component<Props> {
     }));
   };
 
-  addWorld = async (): Promise<void> => {
+  addWord = async (): Promise<void> => {
     const wordRepository = new WordRepository();
-    const {
-      translations: {
-        en, de, pl, uk, da,
-      },
-    } = this.state;
+    const { translations } = this.state;
+
+    const wordMap = new Map();
+    Object.keys(translations).forEach((key) => {
+      wordMap.set(key, translations[key]);
+    });
+    await wordRepository.store(Word.fromMap(wordMap));
+
     const { navigation } = this.props;
-    await wordRepository.store(
-      Word.fromMap(
-        new Map([
-          ['en', en],
-          ['de', de],
-          ['pl', pl],
-          ['uk', uk],
-          ['da', da],
-        ]),
-      ),
-    );
     navigation.goBack();
   };
 
@@ -99,7 +91,7 @@ export default class AddWordScreen extends Component<Props> {
       <WordInput
         key={key}
         lang={key}
-        onBlur={({ e }: any): void => this.onBlur(key, e)}
+        onBlur={(e): void => this.onBlur(key, e)}
       />
     ));
 
@@ -107,7 +99,7 @@ export default class AddWordScreen extends Component<Props> {
       <SafeAreaView style={styles.container}>
         {inputs}
         <TouchableOpacity
-          onPress={this.addWorld}
+          onPress={this.addWord}
           style={styles.addWordButton}
         >
           <Text style={{ color: '#fff' }}>Save translations!</Text>

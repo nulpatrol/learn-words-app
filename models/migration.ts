@@ -6,7 +6,9 @@ const db = Database.getConnection();
 
 const tables = [
   `create table if not exists languages (
+    id integer primary key not null,
     key varchar,
+    name varchar,
     UNIQUE(key)
   );`,
   `create table if not exists words (
@@ -27,7 +29,20 @@ const tables = [
   );`,
 ];
 
-const languagesList = ['en', 'de', 'pl', 'uk', 'da', 'ru', 'fr'];
+const migrateLanguages = async () => {
+  const languagesList = [
+    {key: 'en', name: 'English'},
+    {key: 'de', name: 'Deutsch'},
+    {key: 'pl', name: 'Polski'},
+    {key: 'uk', name: 'Українська'},
+    {key: 'da', name: 'Dansk'},
+    {key: 'ru', name: 'Русский'},
+    {key: 'fr', name: 'Français'},
+  ];
+  const languagesPromises = languagesList.map((lang) =>
+    processQuery('insert into languages (key, name) VALUES (?, ?)', [lang.key, lang.name]));
+  await Promise.all(languagesPromises);
+};
 
 export default async (): Promise<void> => {
   let isMigrated = false;
@@ -57,8 +72,7 @@ export default async (): Promise<void> => {
   await processQuery('insert into settings (key, value) VALUES ("main_language", "en")');
   await processQuery('insert into settings (key, value) VALUES ("secondary_language", "ru")');
 
-  const languagesPromises = languagesList.map((lang) => processQuery('insert into languages (key) VALUES (?)', [lang]));
-  await Promise.all(languagesPromises);
+  await migrateLanguages();
 
   const wordRepository = new WordRepository();
   await wordRepository.store(

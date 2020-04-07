@@ -1,6 +1,15 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
 const accentColor = '#00adb5';
+const dangerColor = '#ff5a1b';
+
+const buttonStyle = {
+  borderRadius: 4,
+  width: '80%',
+  height: 50,
+  alignItems: 'center',
+  justifyContent: 'center',
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,11 +69,11 @@ const styles = StyleSheet.create({
   },
   buttonGame: {
     backgroundColor: accentColor,
-    borderRadius: 4,
-    width: '80%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...buttonStyle,
+  },
+  deleteButton: {
+    backgroundColor: dangerColor,
+    ...buttonStyle,
   },
   buttonGameText: {
     color: '#fff',

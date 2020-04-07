@@ -6,6 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import WordListScreen from './pages/WordListScreen';
 import PracticeScreen from './pages/PracticeScreen';
 import migrate from './models/migration';
+import SettingsScreen from './pages/SettingsScreen';
 
 const AppNavigator = createBottomTabNavigator(
   {
@@ -21,6 +22,12 @@ const AppNavigator = createBottomTabNavigator(
         title: 'Practice',
       },
     },
+    SettingsScreen: {
+      screen: SettingsScreen,
+      navigationOptions: {
+        title: 'Settings'
+      }
+    }
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -30,6 +37,7 @@ const AppNavigator = createBottomTabNavigator(
         const icons: {[key: string]: string} = {
           WordListScreen: 'book',
           PracticeScreen: 'graduation-cap',
+          SettingsScreen: 'cogs',
         };
 
         return (

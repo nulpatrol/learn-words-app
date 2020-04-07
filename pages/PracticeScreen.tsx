@@ -9,6 +9,7 @@ import { createStackNavigator, NavigationStackOptions } from 'react-navigation-s
 import { NavigationParams } from 'react-navigation';
 import styles from '../styles/styles';
 import AddWordScreen from './AddWordScreen';
+import Button from '../components/Button';
 
 type Props = {
     navigation: NavigationParams;
@@ -25,15 +26,13 @@ const PracticeScreen = memo((props: Props) => {
           'Match words',
           'Listen and choose',
           'Write word',
-          'Listen and choose',
         ].map((text) => (
-          <TouchableOpacity
+          <Button
             key={text.replace(' ', '_')}
-            onPress={(): void => navigation.navigate('newWordScreen')}
-            style={styles.buttonGame}
-          >
-            <Text style={styles.buttonGameText}>{text}</Text>
-          </TouchableOpacity>
+            type={'game'}
+            onClick={(): void => navigation.navigate('newWordScreen')}
+            label={text}
+          />
         ))
       }
     </SafeAreaView>

@@ -44,13 +44,15 @@ class WordListScreen extends Component<Props> {
   componentDidMount(): void {
     this.update();
 
-    /* this.subs = [
-          this.props.navigation.addListener('didFocus', () => this.update()),
-      ]; */
+    const { navigation } = this.props;
+    this.subs = [
+      // @ts-ignore
+      navigation.addListener('didFocus', () => this.update()),
+    ];
   }
 
   componentWillUnmount(): void {
-    // this.subs.forEach(sub => sub.remove());
+    this.subs.forEach(sub => sub.remove());
   }
 
   update(): void {
@@ -77,9 +79,9 @@ class WordListScreen extends Component<Props> {
         <StatusBar barStyle="light-content" />
         <ScrollView>
           {
-            words.map((l) => (
+            words.map((l, i) => (
               <ListItem
-                key={l.main_value}
+                key={i}
                     // @ts-ignore
                 leftElement={
                   (): ReactNode => (

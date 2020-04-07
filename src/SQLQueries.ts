@@ -7,6 +7,8 @@ export const GET_WORDS = `
         st.language = (select value from settings where key = "secondary_language")
 `;
 
+export const GET_LANGUAGES = 'select * from languages';
+
 export const INSERT_WORD = 'insert into words (id) VALUES (null)';
 
 export const INSERT_TRANSLATION = `
