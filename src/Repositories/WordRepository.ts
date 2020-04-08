@@ -12,7 +12,7 @@ export class WordRepository {
 
     const promises = Object
       .keys(translations)
-      .map((language) => processQuery(queries.INSERT_TRANSLATION, [
+      .map(language => processQuery(queries.INSERT_TRANSLATION, [
         translations[language],
         wordId,
         language,
@@ -22,9 +22,9 @@ export class WordRepository {
   }
 
   static async getWithTranslation(): Promise<Array<WordInfo>> {
-    const [result] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
-    // @ts-ignore
-    return result.rows;
+    const [{ rows }] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
+
+    return rows as Array<WordInfo>;
   }
 
   static async truncate(): Promise<number> {

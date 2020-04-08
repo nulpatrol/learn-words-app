@@ -6,6 +6,6 @@ export class LanguageRepository {
   static async all(): Promise<Array<Language>> {
     const [{ rows }] = await execute([{ sql: queries.GET_LANGUAGES, args: [] }]);
 
-    return <Array<Language>>rows;
+    return rows as Array<Language>;
   }
 }
