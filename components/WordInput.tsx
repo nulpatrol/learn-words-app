@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { memo, FC } from 'react';
 import {
   NativeSyntheticEvent, TextInput, TextInputFocusEventData, View,
 } from 'react-native';
@@ -7,11 +7,11 @@ import { FlagIcon } from './FlagIcon';
 
 type WordInputProps = {
     lang: string;
-    onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+    onChange: Function;
 };
 
-export default function WordInput(props: WordInputProps): ReactNode {
-  const { lang, onBlur } = props;
+const WordInput: FC<WordInputProps> = (props: WordInputProps) => {
+  const { lang, onChange } = props;
   return (
     <View style={styles.searchSection}>
       <View style={styles.withBorder}>
@@ -19,10 +19,17 @@ export default function WordInput(props: WordInputProps): ReactNode {
       </View>
       <TextInput
         style={styles.input}
-        onBlur={onBlur}
+        onChange={
+            (e: NativeSyntheticEvent<TextInputFocusEventData>): void => onChange(
+              lang,
+              e.nativeEvent.text,
+            )
+        }
         underlineColorAndroid="transparent"
         autoCapitalize="none"
       />
     </View>
   );
-}
+};
+
+export default memo(WordInput);

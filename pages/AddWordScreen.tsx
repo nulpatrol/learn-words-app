@@ -1,9 +1,8 @@
-import React, { Component, ReactNode } from 'react';
+import React, { useMemo, useState, ReactNode, useEffect } from 'react';
 import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  TextInputFocusEventData,
 } from 'react-native';
 
 import { NavigationParams } from 'react-navigation';
@@ -21,60 +20,36 @@ type Translations = {[key: string]: string};
 type Language = {
     key: string;
 }
-type AddWordScreenState = {
-    languages: Array<Language>;
-    translations: Translations;
-};
 
-export default class AddWordScreen extends Component<Props> {
-  state: AddWordScreenState = {
-    languages: [
-      {
-        key: 'en',
-      },
-      {
-        key: 'fr',
-      },
-      {
-        key: 'ru',
-      },
-    ],
-    translations: {},
-  };
+type LanguagesList = Array<Language>
 
-  db = Database.getConnection();
+const getInputsList = (
+  languagesList: LanguagesList,
+  onTextChange: Function,
+): Array<ReactNode> => languagesList.map(({ key }: Language) => (
+  <WordInput
+    key={key}
+    lang={key}
+    onChange={onTextChange}
+  />
+));
 
-  componentDidMount(): void {
-    // this.update();
-  }
+const AddWordScreen: (props: Props) => void = (props: Props) => {
+  const [languagesList, setLanguages] = useState<LanguagesList>([]);
+  const [translations, addNewWord] = useState<Translations>({});
+  const inputsList = useMemo(
+    () => getInputsList(languagesList, addNewWord),
+    [languagesList, addNewWord],
+  );
 
-  // async update() {
-  //   await execute(
-  //     [{sql: `select * from languages`, args: []}],
-  //     false,
-  //     (error, result) => {
-  //         if (!error) {
-  //             return resolve(result)
-  //         }
-  //
-  //         reject(error)
-  //     }
-  //   );
-  //
-  //   this.setState({ languages: _array });
-  // }
+  useEffect(async () => {
+    LanguageRepository.all().then((result: Array<DbWord>) => {
+      setLanguages(result);
+    });
+  }, []);
 
-  onBlur = (lang: string, event: React.BaseSyntheticEvent<TextInputFocusEventData>): void => {
-    const { text } = event.nativeEvent;
-
-    this.setState((prevState: AddWordScreenState) => ({
-      translations: { ...prevState.translations, [lang]: text },
-    }));
-  };
-
-  addWord = async (): Promise<void> => {
+  const addWord = async (): Promise<void> => {
     const wordRepository = new WordRepository();
-    const { translations } = this.state;
 
     const wordMap = new Map();
     Object.keys(translations).forEach((key) => {
@@ -82,30 +57,108 @@ export default class AddWordScreen extends Component<Props> {
     });
     await wordRepository.store(Word.fromMap(wordMap));
 
-    const { navigation } = this.props;
+    const { navigation } = props;
     navigation.goBack();
   };
 
-  render(): ReactNode {
-    const { languages } = this.state;
-    const inputs = languages.map(({ key }: Language) => (
-      <WordInput
-        key={key}
-        lang={key}
-        onBlur={(e): void => this.onBlur(key, e)}
-      />
-    ));
+  return (
+    <SafeAreaView style={styles.container}>
+      {inputsList}
+      <TouchableOpacity
+        onPress={addWord}
+        style={styles.addWordButton}
+      >
+        <Text style={{ color: '#fff' }}>Save translations!</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
 
-    return (
-      <SafeAreaView style={styles.container}>
-        {inputs}
-        <TouchableOpacity
-          onPress={this.addWord}
-          style={styles.addWordButton}
-        >
-          <Text style={{ color: '#fff' }}>Save translations!</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    );
-  }
-}
+export default AddWordScreen;
+
+// export default class AddWordScreen extends Component<Props> {
+//   state: AddWordScreenState = {
+//     languages: [
+//       {
+//         key: 'en',
+//       },
+//       {
+//         key: 'fr',
+//       },
+//       {
+//         key: 'ru',
+//       },
+//     ],
+//     translations: {},
+//   };
+//
+//   db = Database.getConnection();
+//
+//   componentDidMount(): void {
+//     // this.update();
+//   }
+//
+//   // async update() {
+//   //   await execute(
+//   //     [{sql: `select * from languages`, args: []}],
+//   //     false,
+//   //     (error, result) => {
+//   //         if (!error) {
+//   //             return resolve(result)
+//   //         }
+//   //
+//   //         reject(error)
+//   //     }
+//   //   );
+//   //
+//   //   this.setState({ languages: _array });
+//   // }
+//
+//   onTextChange = (lang: string, text: string): void => {
+//     this.setState((prevState: AddWordScreenState) => ({
+//       translations: { ...prevState.translations, [lang]: text },
+//     }));
+//   };
+//
+//   addWord = async (): Promise<void> => {
+//     const wordRepository = new WordRepository();
+//     const { translations } = this.state;
+//
+//     const wordMap = new Map();
+//     Object.keys(translations).forEach((key) => {
+//       wordMap.set(key, translations[key]);
+//     });
+//     await wordRepository.store(Word.fromMap(wordMap));
+//
+//     const { navigation } = this.props;
+//     navigation.goBack();
+//   };
+//
+//   getInputsList = (): Array<ReactNode> => {
+//     const { languages } = this.state;
+//
+//     return languages.map(({ key }: Language) => (
+//       <WordInput
+//         key={key}
+//         lang={key}
+//         onChange={this.onTextChange}
+//       />
+//     ));
+//   };
+//
+//   render(): ReactNode {
+//     const inputs = this.getInputsList();
+//
+//     return (
+//       <SafeAreaView style={styles.container}>
+//         {inputs}
+//         <TouchableOpacity
+//           onPress={this.addWord}
+//           style={styles.addWordButton}
+//         >
+//           <Text style={{ color: '#fff' }}>Save translations!</Text>
+//         </TouchableOpacity>
+//       </SafeAreaView>
+//     );
+//   }
+// }

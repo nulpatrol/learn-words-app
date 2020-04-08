@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { FC, memo } from 'react';
 import Svg, { Circle, G, Path } from 'react-native-svg';
 
 type FlagIconProps = {
@@ -7,7 +7,7 @@ type FlagIconProps = {
     type: string;
 }
 
-export const FlagIcon = memo((props: FlagIconProps) => {
+export const FlagIcon: FC<FlagIconProps> = memo((props: FlagIconProps) => {
   const { type, width, height } = props;
   switch (type) {
     case 'de':
