@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import React, { ReactNode } from 'react';
+import React, { memo, FC } from 'react';
 import styles from '../styles/styles';
 
 type ButtonProps = {
@@ -14,9 +14,7 @@ type ButtonProps = {
   type: string;
 };
 
-export default function Button(props: ButtonProps): ReactNode {
-  const { onClick, label, type } = props;
-
+const Button: FC<ButtonProps> = ({ onClick, label, type }) => {
   const mapping: { [key: string]: StyleProp<ViewStyle> } = {
     game: styles.buttonGame,
     danger: styles.deleteButton,
@@ -30,4 +28,6 @@ export default function Button(props: ButtonProps): ReactNode {
       <Text style={styles.buttonGameText}>{label}</Text>
     </TouchableOpacity>
   );
-}
+};
+
+export default memo(Button);
