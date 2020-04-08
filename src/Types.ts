@@ -1,4 +1,4 @@
-export type DbWord = {
+export type WordInfo = {
     main_value: string;
     second_value: string;
     level: number;

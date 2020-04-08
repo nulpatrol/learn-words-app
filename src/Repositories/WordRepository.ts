@@ -1,13 +1,12 @@
 import { execute, processQuery } from '../../Database';
 import { Word } from '../Entities/Word';
 import * as queries from '../SQLQueries';
-import { DbWord } from '../Types';
+import { WordInfo } from '../Types';
 
 const NEW_WORD_KNOWLEDGE_LEVEL = 0;
 
 export class WordRepository {
-  async store(word: Word): Promise<void> {
-    console.log('in store', word);
+  static async store(word: Word): Promise<void> {
     const { insertId: wordId } = await processQuery(queries.INSERT_WORD);
     const translations = word.getTranslations();
 
@@ -22,10 +21,10 @@ export class WordRepository {
     await Promise.all(promises);
   }
 
-  async getWithTranslation(): Promise<Array<DbWord>> {
-    const [result] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
-    // @ts-ignore
-    return result.rows;
+  static async getWithTranslation(): Promise<Array<WordInfo>> {
+    const [{ rows }] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
+
+    return rows as Array<WordInfo>;
   }
 
   static async truncate(): Promise<number> {
