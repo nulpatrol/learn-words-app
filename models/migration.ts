@@ -1,4 +1,5 @@
 import { processQuery, execute } from '../Database';
+import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 
 const tables = [
   `create table if not exists languages (
@@ -25,7 +26,7 @@ const tables = [
   );`,
 ];
 
-const migrateLanguages = async () => {
+const migrateLanguages = async (): void => {
   const languagesList = [
     { key: 'en', name: 'English' },
     { key: 'de', name: 'Deutsch' },
@@ -41,19 +42,8 @@ const migrateLanguages = async () => {
   await Promise.all(languagesPromises);
 };
 
-export default async (): Promise<void> => {
-  let isMigrated = false;
-  try {
-    const [{ rows }] = await execute([
-      { sql: 'select value from settings where key = "migrated"', args: [] },
-    ]);
-    isMigrated = rows.length > 0;
-  } catch (e) {
-  }
-
-  if (isMigrated) {
-    return;
-  }
+const migrate = async (): Promise<void> => {
+  console.log('migration');
 
   await execute([
     { sql: 'PRAGMA foreign_keys = ON;', args: [] },
@@ -72,4 +62,13 @@ export default async (): Promise<void> => {
   await migrateLanguages();
 
   await processQuery('insert into settings (key, value) VALUES ("migrated", "ok")');
+};
+
+export default async (): Promise<void> => {
+  try {
+    await SettingsRepository.get('migrated');
+    return;
+  } catch (e) {
+    migrate();
+  }
 };

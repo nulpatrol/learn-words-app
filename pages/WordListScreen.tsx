@@ -8,15 +8,14 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ListItem } from 'react-native-elements';
-// @ts-ignore
-import { CircularProgress } from 'react-native-svg-circular-progress';
+import { CircularProgress } from '../components/CircularProgress';
 import * as Speech from 'expo-speech';
-import { NavigationEventSubscription, NavigationParams } from 'react-navigation';
+import { NavigationParams } from 'react-navigation';
 import AddWordScreen from './AddWordScreen';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
 import type { WordInfo } from '../src/Types';
-import { SettingsRepository } from "../src/Repositories/SettingsRepository";
+import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 
 type Props = {
     navigation: NavigationParams;
@@ -138,7 +137,8 @@ export default () => {
       <Stack.Screen
         name="AddWordScreen"
         component={AddWordScreen}
-        options={{ title: 'New word' }} />
+        options={{ title: 'New word' }}
+      />
     </Stack.Navigator>
-  )
+  );
 };
