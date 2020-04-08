@@ -5,7 +5,7 @@ export type DbWord = {
 };
 
 export type Language = {
-    id: number,
-    key: string,
-    name: string,
+    id: number;
+    key: string;
+    name: string;
 };
