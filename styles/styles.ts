@@ -86,6 +86,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     justifyContent: 'space-around',
   },
+  settingsContainer: {
+    marginTop: 10,
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#eee',
+  },
   withBorder: {
     borderColor: 'rgba(57, 62, 70, 0.5)',
     borderWidth: 1,

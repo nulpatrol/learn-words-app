@@ -16,6 +16,7 @@ import AddWordScreen from './AddWordScreen';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
 import type { DbWord } from '../src/Types';
+import { SettingsRepository } from "../src/Repositories/SettingsRepository";
 
 type Props = {
     navigation: NavigationParams;
@@ -23,6 +24,7 @@ type Props = {
 
 type WordListScreenState = {
     words: Array<DbWord>;
+    mainLanguage: string;
 };
 
 const innerStyles = StyleSheet.create({
@@ -35,6 +37,7 @@ const innerStyles = StyleSheet.create({
 class WordListScreen extends Component<Props> {
   state: WordListScreenState = {
     words: [],
+    mainLanguage: '',
   };
 
   subs: Array<Function> = [];
@@ -54,13 +57,14 @@ class WordListScreen extends Component<Props> {
   }
 
   update(): void {
-    console.log('aa');
-
     const wordsRepository = new WordRepository();
     wordsRepository.getWithTranslation().then((result: Array<DbWord>) => {
       this.setState(() => ({
         words: result,
       }));
+    });
+    SettingsRepository.get('main_language').then((result: string) => {
+      this.setState(() => ({ mainLanguage: result }));
     });
   }
 
@@ -71,7 +75,7 @@ class WordListScreen extends Component<Props> {
   }
 
   render(): ReactNode {
-    const { words } = this.state;
+    const { words, mainLanguage } = this.state;
     const { navigation } = this.props;
 
     return (
@@ -96,7 +100,7 @@ class WordListScreen extends Component<Props> {
                 titleStyle={{ fontWeight: 'bold' }}
                 subtitle={l.second_value}
                 onPress={(): void => Speech.speak(l.main_value, {
-                  language: 'uk',
+                  language: mainLanguage,
                 })}
               />
             ))
@@ -105,7 +109,7 @@ class WordListScreen extends Component<Props> {
 
         <TouchableOpacity
           style={styles.floatingButton}
-          onPress={(): void => navigation.navigate('addWordScreen')}
+          onPress={(): void => navigation.navigate('AddWordScreen')}
         >
           <Text style={{
             color: '#fff', fontSize: 26, fontWeight: 'bold', lineHeight: 27,
@@ -132,7 +136,10 @@ export default () => {
       }}
     >
       <Stack.Screen name="Word list" component={WordListScreen} />
-      <Stack.Screen name="addWordScreen" component={AddWordScreen} />
+      <Stack.Screen
+        name="AddWordScreen"
+        component={AddWordScreen}
+        options={{ title: 'New word' }} />
     </Stack.Navigator>
   )
 };

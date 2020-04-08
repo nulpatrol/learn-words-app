@@ -11,7 +11,9 @@ import WordInput from '../components/WordInput';
 import styles from '../styles/styles';
 import { Database } from '../Database';
 import { WordRepository } from '../src/Repositories/WordRepository';
+import { LanguageRepository } from '../src/Repositories/LanguageRepository';
 import { Word } from '../src/Models/Word';
+import { DbWord } from "../src/Types";
 
 type Props = {
     navigation: NavigationParams;
@@ -28,41 +30,21 @@ type AddWordScreenState = {
 
 export default class AddWordScreen extends Component<Props> {
   state: AddWordScreenState = {
-    languages: [
-      {
-        key: 'en',
-      },
-      {
-        key: 'fr',
-      },
-      {
-        key: 'ru',
-      },
-    ],
+    languages: [],
     translations: {},
   };
 
   db = Database.getConnection();
 
   componentDidMount(): void {
-    // this.update();
+    this.update();
   }
 
-  // async update() {
-  //   await execute(
-  //     [{sql: `select * from languages`, args: []}],
-  //     false,
-  //     (error, result) => {
-  //         if (!error) {
-  //             return resolve(result)
-  //         }
-  //
-  //         reject(error)
-  //     }
-  //   );
-  //
-  //   this.setState({ languages: _array });
-  // }
+  async update() {
+    LanguageRepository.all().then((result: Array<DbWord>) => {
+      this.setState(() => ({ languages: result }));
+    });
+  }
 
   onBlur = (lang: string, event: React.BaseSyntheticEvent<TextInputFocusEventData>): void => {
     const { text } = event.nativeEvent;
