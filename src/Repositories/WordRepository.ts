@@ -7,12 +7,13 @@ const NEW_WORD_KNOWLEDGE_LEVEL = 0;
 
 export class WordRepository {
   async store(word: Word): Promise<void> {
+    console.log('in store', word);
     const { insertId: wordId } = await processQuery(queries.INSERT_WORD);
     const translations = word.getTranslations();
 
     const promises = Object
       .keys(translations)
-      .map((language) => processQuery(queries.INSERT_TRANSLATION, [
+      .map(language => processQuery(queries.INSERT_TRANSLATION, [
         translations[language],
         wordId,
         language,

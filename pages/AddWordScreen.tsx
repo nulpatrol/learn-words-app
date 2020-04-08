@@ -1,5 +1,5 @@
 import React, {
-  useMemo, useState, ReactNode, useEffect,
+  useMemo, useState, useEffect, ReactNode,
 } from 'react';
 import {
   Text,
@@ -9,20 +9,18 @@ import {
 
 import { NavigationParams } from 'react-navigation';
 import WordInput from '../components/WordInput';
-import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
-import { Word } from '../src/Models/Word';
+import { Word } from '../src/Entities/Word';
 import { LanguageRepository } from '../src/Repositories/LanguageRepository';
-import { DbWord } from '../src/Types';
+import { Language } from '../src/Types';
+
+import styles from '../styles/styles';
 
 type Props = {
     navigation: NavigationParams;
 };
 
 type Translations = {[key: string]: string};
-type Language = {
-    key: string;
-}
 
 type LanguagesList = Array<Language>
 
@@ -45,7 +43,11 @@ const getInputsList = (
   <WordInput
     key={key}
     lang={key}
-    onChange={onTextChange}
+    onChange={
+      (newWord: string): void => onTextChange(
+        (prevState: Translations) => ({ ...prevState, [key]: newWord }),
+      )
+    }
   />
 ));
 
@@ -58,7 +60,7 @@ const AddWordScreen: (props: Props) => void = ({ navigation }) => {
   );
 
   useEffect(() => {
-    LanguageRepository.all().then((result: Array<DbWord>) => {
+    LanguageRepository.all().then((result: Array<Language>) => {
       setLanguages(result);
     });
   }, []);

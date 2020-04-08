@@ -1,4 +1,4 @@
-import React, { memo, ReactNode } from 'react';
+import React, { FC, memo, ReactNode } from 'react';
 import {
   SafeAreaView,
 } from 'react-native';
@@ -13,32 +13,30 @@ type Props = {
     navigation: NavigationParams;
 };
 
-const PracticeScreen = memo((props: Props) => {
-  const { navigation } = props;
-  return (
-    <SafeAreaView style={styles.gameContainer}>
-      {
-        [
-          'Choose word',
-          'Choose translation',
-          'Match words',
-          'Listen and choose',
-          'Write word',
-        ].map(text => (
-          <Button
-            key={text.replace(' ', '_')}
-            type="game"
-            onClick={(): void => navigation.navigate('newWordScreen')}
-            label={text}
-          />
-        ))
-      }
-    </SafeAreaView>
-  );
-});
+const PracticeScreen: FC<Props> = memo(({ navigation }) => (
+  <SafeAreaView style={styles.gameContainer}>
+    {
+      [
+        'Choose word',
+        'Choose translation',
+        'Match words',
+        'Listen and choose',
+        'Write word',
+      ].map(text => (
+        <Button
+          key={text.replace(' ', '_')}
+          type="game"
+          onClick={(): void => navigation.navigate('newWordScreen')}
+          label={text}
+        />
+      ))
+    }
+  </SafeAreaView>
+));
 
 export default (): ReactNode => {
   const Stack = createStackNavigator();
+
   return (
     <Stack.Navigator
       headerMode="screen"

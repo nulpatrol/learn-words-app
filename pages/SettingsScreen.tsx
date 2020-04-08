@@ -11,8 +11,8 @@ import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 import CustomButton from '../components/Button';
 import Choice from '../components/Choice';
 import styles from '../styles/styles';
-import { WordRepository } from "../src/Repositories/WordRepository";
-import { migrateLanguages } from "../models/migration";
+import { WordRepository } from '../src/Repositories/WordRepository';
+import { migrateLanguages } from '../models/migration';
 
 type SettingsScreenProps = {
   navigation: NavigationParams;
