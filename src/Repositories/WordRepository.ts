@@ -6,7 +6,7 @@ import { WordInfo } from '../Types';
 const NEW_WORD_KNOWLEDGE_LEVEL = 0;
 
 export class WordRepository {
-  async store(word: Word): Promise<void> {
+  static async store(word: Word): Promise<void> {
     const { insertId: wordId } = await processQuery(queries.INSERT_WORD);
     const translations = word.getTranslations();
 
@@ -21,7 +21,7 @@ export class WordRepository {
     await Promise.all(promises);
   }
 
-  async getWithTranslation(): Promise<Array<WordInfo>> {
+  static async getWithTranslation(): Promise<Array<WordInfo>> {
     const [result] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
     // @ts-ignore
     return result.rows;

@@ -54,14 +54,13 @@ export default class AddWordScreen extends Component<Props> {
   };
 
   addWord = async (): Promise<void> => {
-    const wordRepository = new WordRepository();
     const { translations } = this.state;
 
     const wordMap = new Map();
     Object.keys(translations).forEach((key) => {
       wordMap.set(key, translations[key]);
     });
-    await wordRepository.store(Word.fromMap(wordMap));
+    await WordRepository.store(Word.fromMap(wordMap));
 
     const { navigation } = this.props;
     navigation.goBack();

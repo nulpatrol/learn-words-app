@@ -57,8 +57,7 @@ class WordListScreen extends Component<Props> {
   }
 
   update(): void {
-    const wordsRepository = new WordRepository();
-    wordsRepository.getWithTranslation().then((result: Array<WordInfo>) => {
+    WordRepository.getWithTranslation().then((result: Array<WordInfo>) => {
       this.setState(() => ({
         words: result,
       }));
