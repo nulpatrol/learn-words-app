@@ -37,7 +37,7 @@ const migrateLanguages = async () => {
     { key: 'ru', name: 'Русский' },
     { key: 'fr', name: 'Français' },
   ];
-  const languagesPromises = languagesList.map(lang => {
+  const languagesPromises = languagesList.map((lang) => {
     processQuery('insert into languages (key, name) VALUES (?, ?)', [lang.key, lang.name]);
   });
   await Promise.all(languagesPromises);
@@ -65,7 +65,7 @@ export default async (): Promise<void> => {
     { sql: 'drop table if exists languages', args: [] },
   ]);
 
-  const promises = tables.map((statement) => processQuery(statement));
+  const promises = tables.map(statement => processQuery(statement));
   await Promise.all(promises);
 
   await processQuery('insert into settings (key, value) VALUES ("main_language", "en")');

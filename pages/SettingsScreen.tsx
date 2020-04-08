@@ -17,12 +17,12 @@ type SettingsScreenProps = {
 };
 
 type SettingsScreenState = {
-  languages: Array<object>;
+  languages: Array<DbWord>;
   mainLanguage: string;
 };
 
 class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState> {
-  state = {
+  state: Readonly<SettingsScreenState> = {
     languages: [],
     mainLanguage: '',
   };

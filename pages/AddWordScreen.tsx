@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  TextInputFocusEventData,
 } from 'react-native';
 
 import { NavigationParams } from 'react-navigation';
@@ -63,7 +64,7 @@ export default class AddWordScreen extends Component<Props> {
   //   this.setState({ languages: _array });
   // }
 
-  onBlur = (lang: string, event: React.BaseSyntheticEvent<any>): void => {
+  onBlur = (lang: string, event: React.BaseSyntheticEvent<TextInputFocusEventData>): void => {
     const { text } = event.nativeEvent;
 
     this.setState((prevState: AddWordScreenState) => ({
@@ -85,9 +86,9 @@ export default class AddWordScreen extends Component<Props> {
     navigation.goBack();
   };
 
-  render() {
+  render(): ReactNode {
     const { languages } = this.state;
-    const inputs = languages.map(({ key }) => (
+    const inputs = languages.map(({ key }: Language) => (
       <WordInput
         key={key}
         lang={key}

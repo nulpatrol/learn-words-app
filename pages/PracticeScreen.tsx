@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, ReactNode } from 'react';
 import {
   SafeAreaView,
 } from 'react-native';
@@ -24,7 +24,7 @@ const PracticeScreen = memo((props: Props) => {
           'Match words',
           'Listen and choose',
           'Write word',
-        ].map((text) => (
+        ].map(text => (
           <Button
             key={text.replace(' ', '_')}
             type="game"
@@ -37,7 +37,7 @@ const PracticeScreen = memo((props: Props) => {
   );
 });
 
-export default () => {
+export default (): ReactNode => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator
