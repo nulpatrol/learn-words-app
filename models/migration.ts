@@ -1,6 +1,4 @@
 import { processQuery, execute } from '../Database';
-import { WordRepository } from '../src/Repositories/WordRepository';
-import { Word } from '../src/Models/Word';
 
 const tables = [
   `create table if not exists languages (
@@ -72,56 +70,6 @@ export default async (): Promise<void> => {
   await processQuery('insert into settings (key, value) VALUES ("secondary_language", "ru")');
 
   await migrateLanguages();
-
-  const wordRepository = new WordRepository();
-  await wordRepository.store(
-    Word.fromMap(
-      new Map([
-        ['en', 'hello'],
-        ['de', 'hallo'],
-        ['pl', 'cześć'],
-        ['uk', 'привіт'],
-        ['da', 'hej'],
-      ]),
-    ),
-  );
-  await wordRepository.store(
-    Word.fromMap(
-      new Map([
-        ['en', 'ever'],
-        ['de', 'je'],
-        ['pl', 'kiedykolwiek'],
-        ['uk', 'коли-небудь'],
-        ['da', 'nogensinde'],
-      ]),
-    ),
-  );
-
-  await wordRepository.store(
-    Word.fromMap(
-      new Map([
-        ['en', 'to bump'],
-        ['de', 'stoßen'],
-        ['pl', 'pchnięcie'],
-        ['uk', 'наштовхуватися'],
-        ['da', 'skub'],
-        ['ru', 'hi'],
-      ]),
-    ),
-  );
-
-  await wordRepository.store(
-    Word.fromMap(
-      new Map([
-        ['en', 'I like'],
-        ['de', 'Je suis étudiant.'],
-        ['pl', 'pchnięcie'],
-        ['uk', 'наштовхуватися'],
-        ['da', 'skub'],
-        ['ru', 'привет'],
-      ]),
-    ),
-  );
 
   await processQuery('insert into settings (key, value) VALUES ("migrated", "ok")');
 };

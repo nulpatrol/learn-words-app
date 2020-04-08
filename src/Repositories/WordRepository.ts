@@ -1,5 +1,5 @@
 import { execute, processQuery } from '../../Database';
-import { Word } from '../Models/Word';
+import { Word } from '../Entities/Word';
 import * as queries from '../SQLQueries';
 import { DbWord } from '../Types';
 
