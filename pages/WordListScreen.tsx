@@ -15,7 +15,7 @@ import { NavigationEventSubscription, NavigationParams } from 'react-navigation'
 import AddWordScreen from './AddWordScreen';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
-import type { DbWord } from '../src/Types';
+import type { WordInfo } from '../src/Types';
 import { SettingsRepository } from "../src/Repositories/SettingsRepository";
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 };
 
 type WordListScreenState = {
-    words: Array<DbWord>;
+    words: Array<WordInfo>;
     mainLanguage: string;
 };
 
@@ -58,7 +58,7 @@ class WordListScreen extends Component<Props> {
 
   update(): void {
     const wordsRepository = new WordRepository();
-    wordsRepository.getWithTranslation().then((result: Array<DbWord>) => {
+    wordsRepository.getWithTranslation().then((result: Array<WordInfo>) => {
       this.setState(() => ({
         words: result,
       }));

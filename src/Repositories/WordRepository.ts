@@ -1,7 +1,7 @@
 import { execute, processQuery } from '../../Database';
 import { Word } from '../Entities/Word';
 import * as queries from '../SQLQueries';
-import { DbWord } from '../Types';
+import { WordInfo } from '../Types';
 
 const NEW_WORD_KNOWLEDGE_LEVEL = 0;
 
@@ -21,7 +21,7 @@ export class WordRepository {
     await Promise.all(promises);
   }
 
-  async getWithTranslation(): Promise<Array<DbWord>> {
+  async getWithTranslation(): Promise<Array<WordInfo>> {
     const [result] = await execute([{ sql: queries.GET_WORDS, args: [] }]);
     // @ts-ignore
     return result.rows;

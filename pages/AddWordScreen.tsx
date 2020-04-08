@@ -12,8 +12,7 @@ import styles from '../styles/styles';
 import { Database } from '../Database';
 import { WordRepository } from '../src/Repositories/WordRepository';
 import { LanguageRepository } from '../src/Repositories/LanguageRepository';
-import { Word } from '../src/Models/Word';
-import { DbWord } from "../src/Types";
+import { Word } from '../src/Entities/Word';
 
 type Props = {
     navigation: NavigationParams;
@@ -41,7 +40,7 @@ export default class AddWordScreen extends Component<Props> {
   }
 
   async update() {
-    LanguageRepository.all().then((result: Array<DbWord>) => {
+    LanguageRepository.all().then((result: Array<Language>) => {
       this.setState(() => ({ languages: result }));
     });
   }

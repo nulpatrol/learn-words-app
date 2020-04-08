@@ -5,21 +5,20 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationParams } from 'react-navigation';
-import { DbWord } from '../src/Types';
+import { Language } from '../src/Types';
 import { LanguageRepository } from '../src/Repositories/LanguageRepository';
 import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 import CustomButton from '../components/Button';
 import Choice from '../components/Choice';
 import styles from '../styles/styles';
 import { WordRepository } from "../src/Repositories/WordRepository";
-import { migrateLanguages } from "../models/migration";
 
 type SettingsScreenProps = {
   navigation: NavigationParams;
 };
 
 type SettingsScreenState = {
-  languages: Array<DbWord>;
+  languages: Array<Language>;
   mainLanguage: string;
   secondaryLanguage: string;
 };
@@ -44,7 +43,7 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
   }
 
   update(): void {
-    LanguageRepository.all().then((result: Array<DbWord>) => {
+    LanguageRepository.all().then((result: Array<Language>) => {
       this.setState(() => ({ languages: result }));
     });
     SettingsRepository.get('main_language').then((result: string) => {
