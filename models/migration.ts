@@ -1,6 +1,4 @@
 import { processQuery, execute } from '../Database';
-import { WordRepository } from '../src/Repositories/WordRepository';
-import { Word } from '../src/Models/Word';
 
 const tables = [
   `create table if not exists languages (
