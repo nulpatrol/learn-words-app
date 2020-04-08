@@ -25,13 +25,11 @@ type Translations = {[key: string]: string};
 type LanguagesList = Array<Language>
 
 const addWord = async (translations: Translations, navigation: NavigationParams): Promise<void> => {
-  const wordRepository = new WordRepository();
-
   const wordMap = new Map();
   Object.keys(translations).forEach((key) => {
     wordMap.set(key, translations[key]);
   });
-  await wordRepository.store(Word.fromMap(wordMap));
+  await WordRepository.store(Word.fromMap(wordMap));
 
   navigation.goBack();
 };

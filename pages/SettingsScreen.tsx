@@ -11,7 +11,7 @@ import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 import CustomButton from '../components/Button';
 import Choice from '../components/Choice';
 import styles from '../styles/styles';
-import { WordRepository } from "../src/Repositories/WordRepository";
+import { WordRepository } from '../src/Repositories/WordRepository';
 
 type SettingsScreenProps = {
   navigation: NavigationParams;
@@ -86,7 +86,7 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
           items={preparedLanguages}
           value={secondaryLanguage}
         />
-        <View style={{height: 10}} />
+        <View style={{ height: 10 }} />
         <CustomButton
           onClick={(): void => {
             WordRepository.truncate();
