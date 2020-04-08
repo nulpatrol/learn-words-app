@@ -9,7 +9,7 @@ export class SettingsRepository {
           { value },
         ],
       },
-    ] = await execute([{ sql: queries.GET_SETTING, args: [key]}]);
+    ] = await execute([{ sql: queries.GET_SETTING, args: [key] }]);
     return value;
   }
 

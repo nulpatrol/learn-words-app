@@ -1,9 +1,10 @@
 import * as SQLite from 'expo-sqlite';
+import { WebSQLDatabase } from 'expo-sqlite';
 
 const db = SQLite.openDatabase('application.db');
 
 export class Database {
-  static getConnection() {
+  static getConnection(): WebSQLDatabase {
     return db;
   }
 }
@@ -18,7 +19,7 @@ export const processQuery = async<T> (sql: string, params: Array<T> = []): Promi
         (a, b) => reject(b),
       );
     });
-  }
+  },
 );
 
 export const execute = async (statements: Array<SQLite.Query>): Promise<Array<SQLite.ResultSet>> => new Promise(
@@ -29,6 +30,6 @@ export const execute = async (statements: Array<SQLite.Query>): Promise<Array<SQ
       }
 
       reject(error);
-    })
-  }
+    });
+  },
 );

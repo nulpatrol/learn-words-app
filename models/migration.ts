@@ -1,8 +1,6 @@
-import { Database, processQuery, execute } from '../Database';
+import { processQuery, execute } from '../Database';
 import { WordRepository } from '../src/Repositories/WordRepository';
 import { Word } from '../src/Models/Word';
-
-const db = Database.getConnection();
 
 const tables = [
   `create table if not exists languages (
@@ -31,24 +29,25 @@ const tables = [
 
 const migrateLanguages = async () => {
   const languagesList = [
-    {key: 'en', name: 'English'},
-    {key: 'de', name: 'Deutsch'},
-    {key: 'pl', name: 'Polski'},
-    {key: 'uk', name: 'Українська'},
-    {key: 'da', name: 'Dansk'},
-    {key: 'ru', name: 'Русский'},
-    {key: 'fr', name: 'Français'},
+    { key: 'en', name: 'English' },
+    { key: 'de', name: 'Deutsch' },
+    { key: 'pl', name: 'Polski' },
+    { key: 'uk', name: 'Українська' },
+    { key: 'da', name: 'Dansk' },
+    { key: 'ru', name: 'Русский' },
+    { key: 'fr', name: 'Français' },
   ];
-  const languagesPromises = languagesList.map((lang) =>
-    processQuery('insert into languages (key, name) VALUES (?, ?)', [lang.key, lang.name]));
+  const languagesPromises = languagesList.map(lang => {
+    processQuery('insert into languages (key, name) VALUES (?, ?)', [lang.key, lang.name]);
+  });
   await Promise.all(languagesPromises);
 };
 
 export default async (): Promise<void> => {
   let isMigrated = false;
   try {
-    let [ { rows } ] = await execute([
-      { sql: 'select value from settings where key = "migrated"', args: [] }
+    const [{ rows }] = await execute([
+      { sql: 'select value from settings where key = "migrated"', args: [] },
     ]);
     isMigrated = rows.length > 0;
   } catch (e) {

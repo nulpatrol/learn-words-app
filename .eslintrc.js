@@ -41,6 +41,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-ignore': 1,
     'react/state-in-constructor': 0,
     'class-methods-use-this': 1,
+    'arrow-parens': [2, 'as-needed', { requireForBlockBody: true }],
   },
   settings: {
     'import/parsers': {

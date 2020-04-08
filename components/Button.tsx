@@ -1,19 +1,25 @@
-import React from 'react';
+import {
+  GestureResponderEvent,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
+import React, { ReactNode } from 'react';
 import styles from '../styles/styles';
-import { GestureResponderEvent, Text, TouchableOpacity } from 'react-native';
 
 type ButtonProps = {
-  onClick: (e: GestureResponderEvent) => void,
-  label: string,
-  type: string,
+  onClick: (e: GestureResponderEvent) => void;
+  label: string;
+  type: string;
 };
 
-export default function Button(props: ButtonProps) {
+export default function Button(props: ButtonProps): ReactNode {
   const { onClick, label, type } = props;
 
-  const mapping: any = {
-    'game': styles.buttonGame,
-    'danger': styles.deleteButton,
+  const mapping: { [key: string]: StyleProp<ViewStyle> } = {
+    game: styles.buttonGame,
+    danger: styles.deleteButton,
   };
 
   return (
@@ -24,4 +30,4 @@ export default function Button(props: ButtonProps) {
       <Text style={styles.buttonGameText}>{label}</Text>
     </TouchableOpacity>
   );
-};
+}

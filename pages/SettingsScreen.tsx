@@ -1,16 +1,15 @@
-import React, {Component, ReactNode} from 'react';
+import React, { Component, ReactNode } from 'react';
 import {
   SafeAreaView,
-  StatusBar, Text,
+  Text,
 } from 'react-native';
-import { createStackNavigator, NavigationStackOptions } from 'react-navigation-stack';
-// @ts-ignore
-import {NavigationParams} from 'react-navigation';
-import {DbWord} from "../src/Types";
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationParams } from 'react-navigation';
+import { DbWord } from '../src/Types';
 import { LanguageRepository } from '../src/Repositories/LanguageRepository';
 import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 import CustomButton from '../components/Button';
-import Choice from "../components/Choice";
+import Choice from '../components/Choice';
 import styles from '../styles/styles';
 
 type SettingsScreenProps = {
@@ -18,20 +17,26 @@ type SettingsScreenProps = {
 };
 
 type SettingsScreenState = {
-  modalIsVisible: boolean,
-  languages: Array<object>,
-  mainLanguage: string,
+  languages: Array<object>;
+  mainLanguage: string;
 };
 
 class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState> {
   state = {
-    modalIsVisible: true,
     languages: [],
     mainLanguage: '',
   };
 
+  subs: Array<Function> = [];
+
   componentDidMount(): void {
     this.update();
+    const { navigation } = this.props;
+    this.subs.push(navigation.addListener('didFocus', () => this.update()));
+  }
+
+  componentWillUnmount(): void {
+    this.subs.forEach(sub => sub());
   }
 
   update(): void {
@@ -46,14 +51,10 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
     });
   }
 
-  chooseLanguage(chosen: string) {
+  chooseLanguage(chosen: string): void {
     this.setState(() => ({
       mainLanguage: chosen,
     }));
-  }
-
-  languageChosen() {
-    console.log(this.state.mainLanguage);
   }
 
   render(): ReactNode {
@@ -66,36 +67,37 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
 
     return (
       <SafeAreaView style={styles.gameContainer}>
-        <StatusBar barStyle="light-content"/>
 
         <Text>Bla</Text>
 
-        <Choice onDonePress={({ value }) => {
-          const settingsRepository = new SettingsRepository();
-          settingsRepository.set('main_language', value);
-        }} items={preparedLanguages} value={mainLanguage} />
+        <Choice
+          onDonePress={({ value }): void => {
+            const settingsRepository = new SettingsRepository();
+            settingsRepository.set('main_language', value);
+          }}
+          items={preparedLanguages}
+          value={mainLanguage}
+        />
 
-        <CustomButton label={"Delete all words"} onClick={()=>{}} type={'danger'} />
+        <CustomButton label="Delete all words" type="danger" />
       </SafeAreaView>
     );
   }
 }
 
-export default createStackNavigator(
-  {
-    settingsScreen: {
-      screen: SettingsScreen,
-      navigationOptions: (): NavigationStackOptions => ({
-        title: 'Settings',
-      }),
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#222831',
-      },
-      headerTintColor: '#ffffff',
-    },
-  },
-);
+export default (): ReactNode => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#222831',
+        },
+        headerTintColor: '#ffffff',
+      }}
+    >
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+    </Stack.Navigator>
+  );
+};

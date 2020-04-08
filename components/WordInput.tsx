@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   NativeSyntheticEvent, TextInput, TextInputFocusEventData, View,
 } from 'react-native';
@@ -10,7 +10,7 @@ type WordInputProps = {
     onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 };
 
-export default function WordInput(props: WordInputProps) {
+export default function WordInput(props: WordInputProps): ReactNode {
   const { lang, onBlur } = props;
   return (
     <View style={styles.searchSection}>

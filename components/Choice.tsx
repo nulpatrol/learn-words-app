@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
 import {
   Keyboard,
   Modal,
@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -62,11 +62,11 @@ const defaultStyles = StyleSheet.create({
 });
 
 type SelectedItem = {
-  items: Array<Item>,
-  value: string,
+  items: Array<Item>;
+  value: string;
 }
 
-const getSelectedItem = ({ items, value }: SelectedItem) => {
+const getSelectedItem = ({ items, value }: SelectedItem): Item => {
   let idx = items.findIndex(item => item.value === value);
   if (idx === -1) {
     idx = 0;
@@ -75,28 +75,28 @@ const getSelectedItem = ({ items, value }: SelectedItem) => {
 };
 
 type Item = {
-  label: string,
-  value: string,
-  key: number,
+  label: string;
+  value: string;
+  key: number;
 }
 
 type State = {
-  selectedItem: Item,
-  showPicker: boolean,
-  doneDepressed: boolean,
+  selectedItem: Item;
+  showPicker: boolean;
+  doneDepressed: boolean;
 }
 
 type ChoiceProps = {
-  value: string,
-  disabled: boolean,
-  doneText: string,
-  onValueChange: Function | undefined,
-  onDonePress: Function | undefined,
-  items: Array<Item>,
-  textInputProps: object,
-  pickerProps: object,
-  touchableDoneProps: object,
-  touchableWrapperProps: object,
+  value: string;
+  disabled: boolean;
+  doneText: string;
+  onValueChange: Function | undefined;
+  onDonePress: Function | undefined;
+  items: Array<Item>;
+  textInputProps: object;
+  pickerProps: object;
+  touchableDoneProps: object;
+  touchableWrapperProps: object;
 }
 
 export default class Choice extends PureComponent<ChoiceProps, State> {
@@ -135,10 +135,10 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
       items,
       value,
     });
-    this.setState(() => ({ selectedItem }))
+    this.setState(() => ({ selectedItem }));
   }
 
-  onValueChange = (value: string, index: number) => {
+  onValueChange = (value: string, index: number): void => {
     const { onValueChange, items } = this.props;
 
     if (onValueChange) onValueChange(value, index);
@@ -146,7 +146,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     this.setState(() => ({ selectedItem: items[index] }));
   };
 
-  togglePicker = (postToggleCallback: Function | undefined) => {
+  togglePicker = (postToggleCallback: Function | undefined): void => {
     const { disabled } = this.props;
     const { showPicker, selectedItem } = this.state;
 
@@ -157,12 +157,12 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     }
 
     this.setState(
-      (prevState) => ({ showPicker: !prevState.showPicker }),
+      prevState => ({ showPicker: !prevState.showPicker }),
       () => postToggleCallback && postToggleCallback(selectedItem),
     );
   };
 
-  renderInputAccessoryView = () => {
+  renderInputAccessoryView = (): ReactNode => {
     const {
       doneText,
       onDonePress,
@@ -174,13 +174,13 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     return (
       <View style={defaultStyles.modalViewMiddle}>
         <TouchableOpacity
-          onPress={() => {
+          onPress={(): void => {
             this.togglePicker(onDonePress);
           }}
-          onPressIn={() => {
+          onPressIn={(): void => {
             this.setState({ doneDepressed: true });
           }}
-          onPressOut={() => {
+          onPressOut={(): void => {
             this.setState({ doneDepressed: false });
           }}
           hitSlop={{ top: 4, right: 4, bottom: 4, left: 4 }}
@@ -242,7 +242,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
         <Modal
           transparent
           visible={showPicker}
-          animationType='slide'
+          animationType="slide"
         >
           <TouchableOpacity
             style={defaultStyles.modalViewTop}

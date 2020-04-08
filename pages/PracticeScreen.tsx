@@ -1,14 +1,12 @@
 import React, { memo } from 'react';
 import {
   SafeAreaView,
-  TouchableOpacity,
-  Text,
 } from 'react-native';
 
-import { createStackNavigator, NavigationStackOptions } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import { NavigationParams } from 'react-navigation';
 import styles from '../styles/styles';
-import AddWordScreen from './AddWordScreen';
 import Button from '../components/Button';
 
 type Props = {
@@ -29,7 +27,7 @@ const PracticeScreen = memo((props: Props) => {
         ].map((text) => (
           <Button
             key={text.replace(' ', '_')}
-            type={'game'}
+            type="game"
             onClick={(): void => navigation.navigate('newWordScreen')}
             label={text}
           />
@@ -39,27 +37,19 @@ const PracticeScreen = memo((props: Props) => {
   );
 });
 
-export default createStackNavigator(
-  {
-    practiceScreen: {
-      screen: PracticeScreen,
-      navigationOptions: {
-        headerTitle: 'Practice',
-      },
-    },
-    newWordScreen: {
-      screen: AddWordScreen,
-      navigationOptions: (): NavigationStackOptions => ({
-        title: 'Add new word',
-      }),
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#222831',
-      },
-      headerTintColor: '#ffffff',
-    },
-  },
-);
+export default () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#222831',
+        },
+        headerTintColor: '#ffffff',
+      }}
+    >
+      <Stack.Screen name="Practice" component={PracticeScreen} />
+    </Stack.Navigator>
+  );
+};

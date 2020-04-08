@@ -3,11 +3,10 @@ import {
   StyleSheet,
   SafeAreaView,
   Text,
-  StatusBar,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { createStackNavigator, NavigationStackOptions } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { ListItem } from 'react-native-elements';
 // @ts-ignore
 import { CircularProgress } from 'react-native-svg-circular-progress';
@@ -29,7 +28,6 @@ type WordListScreenState = {
 const innerStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
     backgroundColor: '#e6e6e6',
   },
 });
@@ -39,22 +37,25 @@ class WordListScreen extends Component<Props> {
     words: [],
   };
 
-  subs: Array<NavigationEventSubscription> = [];
+  subs: Array<Function> = [];
 
   componentDidMount(): void {
     this.update();
 
     const { navigation } = this.props;
     this.subs = [
-      navigation.addListener('didFocus', () => this.update()),
+      navigation.addListener('focus', () => this.update()),
+      navigation.addListener('blur', () => this.setState(() => ({ words: [] }))),
     ];
   }
 
   componentWillUnmount(): void {
-    this.subs.forEach(sub => sub.remove());
+    this.subs.forEach(sub => sub());
   }
 
   update(): void {
+    console.log('aa');
+
     const wordsRepository = new WordRepository();
     wordsRepository.getWithTranslation().then((result: Array<DbWord>) => {
       this.setState(() => ({
@@ -75,7 +76,6 @@ class WordListScreen extends Component<Props> {
 
     return (
       <SafeAreaView style={innerStyles.container}>
-        <StatusBar barStyle="light-content" />
         <ScrollView>
           {
             words.map((l, i) => (
@@ -119,27 +119,20 @@ class WordListScreen extends Component<Props> {
   }
 }
 
-export default createStackNavigator(
-  {
-    wordListScreen: {
-      screen: WordListScreen,
-      navigationOptions: (): NavigationStackOptions => ({
-        title: 'Word list',
-      }),
-    },
-    addWordScreen: {
-      screen: AddWordScreen,
-      navigationOptions: (): NavigationStackOptions => ({
-        title: 'Add new word',
-      }),
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#222831',
-      },
-      headerTintColor: '#ffffff',
-    },
-  },
-);
+export default () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#222831',
+        },
+        headerTintColor: '#ffffff',
+      }}
+    >
+      <Stack.Screen name="Word list" component={WordListScreen} />
+      <Stack.Screen name="addWordScreen" component={AddWordScreen} />
+    </Stack.Navigator>
+  )
+};
