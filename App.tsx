@@ -48,7 +48,7 @@ class App extends Component {
             options={{
               tabBarLabel: 'Practice',
               tabBarIcon: ({ color, size }): ReactNode => (
-                <FontAwesome name="cogs" size={size} color={color} />
+                <FontAwesome name="graduation-cap" size={size} color={color} />
               ),
             }}
           />
@@ -58,7 +58,7 @@ class App extends Component {
             options={{
               tabBarLabel: 'Settings',
               tabBarIcon: ({ color, size }): ReactNode => (
-                <FontAwesome name="graduation-cap" size={size} color={color} />
+                <FontAwesome name="cogs" size={size} color={color} />
               ),
             }}
           />

@@ -9,6 +9,9 @@ export const GET_WORDS = `
 
 export const GET_LANGUAGES = 'select * from languages';
 
+export const DROP_ALL_TRANSLATIONS = 'delete from words_translations';
+export const DROP_ALL_WORDS = 'delete from words';
+
 export const GET_SETTING = 'select value from settings where key = ?';
 
 export const SET_SETTING = 'update settings set value = ? where key = ?';

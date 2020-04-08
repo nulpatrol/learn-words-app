@@ -26,4 +26,11 @@ export class WordRepository {
     // @ts-ignore
     return result.rows;
   }
+
+  static async truncate(): Promise<number> {
+    await processQuery(queries.DROP_ALL_TRANSLATIONS, []);
+    const { rowsAffected } = await processQuery(queries.DROP_ALL_WORDS, []);
+
+    return rowsAffected;
+  }
 }

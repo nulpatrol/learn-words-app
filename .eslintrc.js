@@ -42,6 +42,7 @@ module.exports = {
     'react/state-in-constructor': 0,
     'class-methods-use-this': 1,
     'arrow-parens': [2, 'as-needed', { requireForBlockBody: true }],
+    'react/prop-types': 0,
   },
   settings: {
     'import/parsers': {

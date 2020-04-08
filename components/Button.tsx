@@ -14,9 +14,7 @@ type ButtonProps = {
   type: string;
 };
 
-const Button: FC<ButtonProps> = (props: ButtonProps) => {
-  const { onClick, label, type } = props;
-
+const Button: FC<ButtonProps> = ({ onClick, label, type }) => {
   const mapping: { [key: string]: StyleProp<ViewStyle> } = {
     game: styles.buttonGame,
     danger: styles.deleteButton,

@@ -2,7 +2,7 @@ import { execute, processQuery } from '../../Database';
 import * as queries from '../SQLQueries';
 
 export class SettingsRepository {
-  async get(key: string): Promise<string> {
+  static async get(key: string): Promise<string> {
     const [
       {
         rows: [
@@ -13,7 +13,7 @@ export class SettingsRepository {
     return value;
   }
 
-  async set(key: string, value: string): Promise<boolean> {
+  static async set(key: string, value: string): Promise<boolean> {
     const { rowsAffected } = await processQuery(queries.SET_SETTING, [value, key]);
 
     return rowsAffected > 0;

@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import {
   SafeAreaView,
-  Text,
+  Text, View,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationParams } from 'react-navigation';
@@ -11,6 +11,8 @@ import { SettingsRepository } from '../src/Repositories/SettingsRepository';
 import CustomButton from '../components/Button';
 import Choice from '../components/Choice';
 import styles from '../styles/styles';
+import { WordRepository } from "../src/Repositories/WordRepository";
+import { migrateLanguages } from "../models/migration";
 
 type SettingsScreenProps = {
   navigation: NavigationParams;
@@ -19,12 +21,14 @@ type SettingsScreenProps = {
 type SettingsScreenState = {
   languages: Array<DbWord>;
   mainLanguage: string;
+  secondaryLanguage: string;
 };
 
 class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState> {
   state: Readonly<SettingsScreenState> = {
     languages: [],
     mainLanguage: '',
+    secondaryLanguage: '',
   };
 
   subs: Array<Function> = [];
@@ -40,14 +44,14 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
   }
 
   update(): void {
-    const languagesRepository = new LanguageRepository();
-    languagesRepository.all().then((result: Array<DbWord>) => {
+    LanguageRepository.all().then((result: Array<DbWord>) => {
       this.setState(() => ({ languages: result }));
     });
-
-    const settingsRepository = new SettingsRepository();
-    settingsRepository.get('main_language').then((result: string) => {
+    SettingsRepository.get('main_language').then((result: string) => {
       this.setState(() => ({ mainLanguage: result }));
+    });
+    SettingsRepository.get('secondary_language').then((result: string) => {
+      this.setState(() => ({ secondaryLanguage: result }));
     });
   }
 
@@ -58,7 +62,7 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
   }
 
   render(): ReactNode {
-    const { languages, mainLanguage } = this.state;
+    const { languages, mainLanguage, secondaryLanguage } = this.state;
     const preparedLanguages = languages.map(language => ({
       key: language.id,
       label: language.name,
@@ -66,20 +70,31 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
     }));
 
     return (
-      <SafeAreaView style={styles.gameContainer}>
-
-        <Text>Bla</Text>
-
+      <SafeAreaView style={styles.settingsContainer}>
+        <Text>Choose main language:</Text>
         <Choice
           onDonePress={({ value }): void => {
-            const settingsRepository = new SettingsRepository();
-            settingsRepository.set('main_language', value);
+            SettingsRepository.set('main_language', value);
           }}
           items={preparedLanguages}
           value={mainLanguage}
         />
-
-        <CustomButton label="Delete all words" type="danger" />
+        <Text>Choose secondary language:</Text>
+        <Choice
+          onDonePress={({ value }): void => {
+            SettingsRepository.set('secondary_language', value);
+          }}
+          items={preparedLanguages}
+          value={secondaryLanguage}
+        />
+        <View style={{height: 10}} />
+        <CustomButton
+          onClick={(): void => {
+            WordRepository.truncate();
+          }}
+          label="Delete all words"
+          type="danger"
+        />
       </SafeAreaView>
     );
   }
