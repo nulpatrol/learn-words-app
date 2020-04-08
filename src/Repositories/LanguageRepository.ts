@@ -1,11 +1,11 @@
-import { execute, processQuery } from '../../Database';
+import { execute } from '../../Database';
 import * as queries from '../SQLQueries';
-import { DbWord } from '../Types';
+import { Language } from '../Types';
 
 export class LanguageRepository {
-  static async all(): Promise<Array<DbWord>> {
+  static async all(): Promise<Array<Language>> {
     const [{ rows }] = await execute([{ sql: queries.GET_LANGUAGES, args: [] }]);
 
-    return <Array<DbWord>>rows;
+    return <Array<Language>>rows;
   }
 }

@@ -3,3 +3,9 @@ export type DbWord = {
     second_value: string;
     level: number;
 };
+
+export type Language = {
+    id: number,
+    key: string,
+    name: string,
+};
