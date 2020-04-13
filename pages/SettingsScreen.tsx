@@ -12,6 +12,7 @@ import CustomButton from '../components/Button';
 import Choice from '../components/Choice';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
+import ChooseLanguagesScreen from './Settings/ChooseLanguagesScreen';
 
 type SettingsScreenProps = {
   navigation: NavigationParams;
@@ -62,6 +63,7 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
 
   render(): ReactNode {
     const { languages, mainLanguage, secondaryLanguage } = this.state;
+    const { navigation } = this.props;
     const preparedLanguages = languages.map(language => ({
       key: language.id,
       label: language.name,
@@ -94,6 +96,13 @@ class SettingsScreen extends Component<SettingsScreenProps, SettingsScreenState>
           label="Delete all words"
           type="danger"
         />
+        <CustomButton
+          onClick={(): void => {
+            navigation.navigate('ChooseLanguages');
+          }}
+          label="Choose languages"
+          type="game"
+        />
       </SafeAreaView>
     );
   }
@@ -112,6 +121,8 @@ export default (): ReactNode => {
       }}
     >
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="ChooseLanguages" component={ChooseLanguagesScreen} />
+
     </Stack.Navigator>
   );
 };

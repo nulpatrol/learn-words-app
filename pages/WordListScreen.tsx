@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ListItem } from 'react-native-elements';
-import { CircularProgress } from '../components/CircularProgress';
-import * as Speech from 'expo-speech';
 import { NavigationParams } from 'react-navigation';
+import * as Speech from 'expo-speech';
+import { CircularProgress } from '../components/CircularProgress';
 import AddWordScreen from './AddWordScreen';
 import styles from '../styles/styles';
 import { WordRepository } from '../src/Repositories/WordRepository';
-import type { WordInfo } from '../src/Types';
 import { SettingsRepository } from '../src/Repositories/SettingsRepository';
+import type { WordInfo } from '../src/Types';
 
 type Props = {
     navigation: NavigationParams;

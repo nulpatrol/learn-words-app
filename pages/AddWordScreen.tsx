@@ -1,6 +1,8 @@
 import React, {
   useMemo, useState, useEffect, ReactNode,
 } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { Action, bindActionCreators, Dispatch } from 'redux';
 import {
   Text,
   SafeAreaView,
@@ -15,6 +17,7 @@ import { LanguageRepository } from '../src/Repositories/LanguageRepository';
 import { Language } from '../src/Types';
 
 import styles from '../styles/styles';
+import { AppState } from '../src/Store/state';
 
 type Props = {
     navigation: NavigationParams;
@@ -58,10 +61,12 @@ const AddWordScreen: (props: Props) => void = ({ navigation }) => {
   );
 
   useEffect(() => {
-    LanguageRepository.all().then((result: Array<Language>) => {
+    LanguageRepository.active().then((result: Array<Language>) => {
       setLanguages(result);
     });
   }, []);
+
+  const counter = useSelector(state => state.id);
 
   return (
     <SafeAreaView style={styles.container}>

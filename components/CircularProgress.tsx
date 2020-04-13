@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 });
 
 const generateArc = (initialPercentage: number, radius: number): string => {
-  const percentage = (initialPercentage === 100) ? initialPercentage : 99.999;
+  const percentage = (initialPercentage === 100) ? 99.999 : initialPercentage;
 
   const angle = (percentage * 2 * Math.PI) / 100;
   const x = radius + (radius * Math.sin(angle));
@@ -35,7 +35,7 @@ type CircularProgressProps = {
   children: React.ReactNode | undefined;
 };
 
-const CircularProgress: FunctionComponent<CircularProgressProps> = ({
+const CircularProgress: FC<CircularProgressProps> = ({
   percentage,
   blankColor,
   donutColor,

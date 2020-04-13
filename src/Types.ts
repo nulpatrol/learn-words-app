@@ -8,4 +8,5 @@ export type Language = {
     id: number;
     key: string;
     name: string;
+    active: boolean;
 };

@@ -9,29 +9,30 @@ export class Database {
   }
 }
 
-export const processQuery = async<T> (sql: string, params: Array<T> = []): Promise<SQLite.SQLResultSet> => {
-  return new Promise(
-    (resolve: Function, reject: Function) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          sql,
-          params,
-          (_, result) => resolve(result),
-          (a, b) => reject(b),
-        );
-      });
-    },
-  );
-};
-
-export const execute = async (statements: Array<SQLite.Query>): Promise<Array<SQLite.ResultSet>> => new Promise(
+export const processQuery = async<T> (
+  sql: string,
+  params: Array<T> = [],
+): Promise<SQLite.SQLResultSet> => new Promise(
   (resolve: Function, reject: Function) => {
-    db.exec(statements, false, (error, result) => {
-      if (!error) {
-        return resolve(result);
-      }
-
-      reject(error);
+    db.transaction((tx) => {
+      tx.executeSql(
+        sql,
+        params,
+        (_, result) => resolve(result),
+        (a, b) => reject(b),
+      );
     });
   },
 );
+
+export const execute = async (
+  statements: Array<SQLite.Query>,
+): Promise<Array<SQLite.ResultSet>> => new Promise((resolve: Function, reject: Function): void => {
+  db.exec(statements, false, (error, result) => {
+    if (!error) {
+      return resolve(result);
+    }
+
+    return reject(error);
+  });
+});

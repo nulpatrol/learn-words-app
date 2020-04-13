@@ -183,7 +183,9 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
           onPressOut={(): void => {
             this.setState({ doneDepressed: false });
           }}
-          hitSlop={{ top: 4, right: 4, bottom: 4, left: 4 }}
+          hitSlop={{
+            top: 4, right: 4, bottom: 4, left: 4,
+          }}
           {...touchableDoneProps}
         >
           <View>
@@ -214,7 +216,7 @@ export default class Choice extends PureComponent<ChoiceProps, State> {
     ));
   };
 
-  render() {
+  render(): ReactNode {
     const { pickerProps, touchableWrapperProps, textInputProps } = this.props;
     const { selectedItem, showPicker } = this.state;
 

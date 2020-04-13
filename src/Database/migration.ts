@@ -1,11 +1,12 @@
-import { processQuery, execute } from '../Database';
-import { SettingsRepository } from '../src/Repositories/SettingsRepository';
+import { processQuery, execute } from '../../Database';
+import { SettingsRepository } from '../Repositories/SettingsRepository';
 
 const tables = [
   `create table if not exists languages (
     id integer primary key not null,
     key varchar,
     name varchar,
+    active boolean,
     UNIQUE(key)
   );`,
   `create table if not exists words (
@@ -28,23 +29,26 @@ const tables = [
 
 const migrateLanguages = async (): void => {
   const languagesList = [
-    { key: 'en', name: 'English' },
-    { key: 'de', name: 'Deutsch' },
-    { key: 'pl', name: 'Polski' },
-    { key: 'uk', name: 'Українська' },
-    { key: 'da', name: 'Dansk' },
-    { key: 'ru', name: 'Русский' },
-    { key: 'fr', name: 'Français' },
+    { key: 'en', name: 'English', active: true },
+    { key: 'de', name: 'Deutsch', active: true },
+    { key: 'pl', name: 'Polski', active: false },
+    { key: 'uk', name: 'Українська', active: false },
+    { key: 'da', name: 'Dansk', active: false },
+    { key: 'ru', name: 'Русский', active: false },
+    { key: 'fr', name: 'Français', active: false },
   ];
-  const languagesPromises = languagesList.map((lang) => {
-    processQuery('insert into languages (key, name) VALUES (?, ?)', [lang.key, lang.name]);
-  });
+  const languagesPromises = languagesList.map(lang => processQuery(
+    'insert into languages (key, name, active) VALUES (?, ?, ?)',
+    [
+      lang.key,
+      lang.name,
+      lang.active,
+    ],
+  ));
   await Promise.all(languagesPromises);
 };
 
 const migrate = async (): Promise<void> => {
-  console.log('migration');
-
   await execute([
     { sql: 'PRAGMA foreign_keys = ON;', args: [] },
     { sql: 'drop table if exists words_translations', args: [] },
@@ -69,6 +73,6 @@ export default async (): Promise<void> => {
     await SettingsRepository.get('migrated');
     return;
   } catch (e) {
-    migrate();
+    await migrate();
   }
 };

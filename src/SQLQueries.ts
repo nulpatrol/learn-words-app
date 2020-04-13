@@ -8,6 +8,8 @@ export const GET_WORDS = `
 `;
 
 export const GET_LANGUAGES = 'select * from languages';
+export const GET_ACTIVE_LANGUAGES = 'select * from languages where active = true';
+export const SET_ACTIVE_LANGUAGES = 'update languages set active = ? where id = ?';
 
 export const DROP_ALL_TRANSLATIONS = 'delete from words_translations';
 export const DROP_ALL_WORDS = 'delete from words';
