@@ -1,8 +1,5 @@
-name: Static analysis
-on:
-  push:
-    branches:
-      - master
+name: Static analysis and tests
+on: [push]
 jobs:
   publish:
     name: Install and publish
